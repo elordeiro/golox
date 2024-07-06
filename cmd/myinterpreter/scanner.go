@@ -153,6 +153,7 @@ func (s *Scanner) string(lox *Lox) {
 
 	if s.isAtEnd() {
 		lox.error(s.Line, "Unterminated string.")
+		return
 	}
 
 	// The closing ".
