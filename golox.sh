@@ -13,7 +13,7 @@ set -e
 #
 # - Edit this to change how your program compiles locally
 # - Edit .codecrafters/compile.sh to change how your program compiles remotely
-go build -o /tmp/interpreter-target ./cmd/myinterpreter
+go build -o /tmp/interpreter-target .
 
 # Copied from .codecrafters/run.sh
 #

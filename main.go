@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+
+	"github.com/codecrafters-io/interpreter-starter-go/lox"
 )
 
 const (
@@ -17,10 +19,6 @@ const (
 type Config struct {
 	Filename string
 	Mode     int
-}
-
-type Lox struct {
-	HadError bool
 }
 
 func main() {
@@ -47,45 +45,27 @@ func main() {
 }
 
 func runFile(config *Config) {
-	lox := &Lox{HadError: false}
+	lox := &lox.Lox{HadError: false}
 	fileContents, err := os.ReadFile(config.Filename)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error reading file: %v\n", err)
 		os.Exit(1)
 	}
-	lox.run(string(fileContents))
+	lox.Run(string(fileContents))
 	if lox.HadError {
 		os.Exit(65)
 	}
 }
 
 func runPrompt() {
-	lox := &Lox{HadError: false}
+	lox := &lox.Lox{HadError: false}
 	reader := bufio.NewReader(os.Stdin)
 	for {
 		fmt.Print("> ")
 		var input string
 		input, _ = reader.ReadString('\n')
-		lox.run(input)
+		lox.Run(input)
 	}
-}
-
-func (lox *Lox) run(source string) {
-	scanner := NewScanner(source)
-	tokens := scanner.ScanTokens(lox)
-
-	for _, token := range tokens {
-		fmt.Println(token)
-	}
-}
-
-func (lox *Lox) error(line int, message string) {
-	lox.report(line, "", message)
-}
-
-func (lox *Lox) report(line int, where string, message string) {
-	fmt.Fprintf(os.Stderr, "[line %d] Error%s: %s\n", line, where, message)
-	lox.HadError = true
 }
 
 func parseArgs() *Config {

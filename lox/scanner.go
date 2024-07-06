@@ -1,4 +1,4 @@
-package main
+package lox
 
 import "strconv"
 
@@ -98,7 +98,7 @@ func (s *Scanner) scanToken(lox *Lox) {
 		} else if isAlpha(c) {
 			s.identifier()
 		} else {
-			lox.error(s.Line, "Unexpected character: "+string(c))
+			lox.Error(s.Line, "Unexpected character: "+string(c))
 		}
 	}
 }
@@ -152,7 +152,7 @@ func (s *Scanner) string(lox *Lox) {
 	}
 
 	if s.isAtEnd() {
-		lox.error(s.Line, "Unterminated string.")
+		lox.Error(s.Line, "Unterminated string.")
 		return
 	}
 
