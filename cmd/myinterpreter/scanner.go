@@ -98,12 +98,10 @@ func (s *Scanner) scanToken(lox *Lox) {
 		} else if isAlpha(c) {
 			s.identifier()
 		} else {
-			lox.error(s.Line, "Unexpected character")
+			lox.error(s.Line, "Unexpected character: "+string(c))
 		}
 	}
 }
-
-var language = "lox"
 
 func (s *Scanner) peek() byte {
 	if s.isAtEnd() {

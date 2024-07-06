@@ -54,6 +54,9 @@ func runFile(config *Config) {
 		os.Exit(1)
 	}
 	lox.run(string(fileContents))
+	if lox.HadError {
+		os.Exit(65)
+	}
 }
 
 func runPrompt() {
@@ -73,9 +76,6 @@ func (lox *Lox) run(source string) {
 
 	for _, token := range tokens {
 		fmt.Println(token)
-		if lox.HadError {
-			os.Exit(65)
-		}
 	}
 }
 
@@ -84,7 +84,7 @@ func (lox *Lox) error(line int, message string) {
 }
 
 func (lox *Lox) report(line int, where string, message string) {
-	fmt.Fprintf(os.Stderr, "[line %d] Error %s: %s\n", line, where, message)
+	fmt.Fprintf(os.Stderr, "[line %d] Error%s: %s\n", line, where, message)
 	lox.HadError = true
 }
 
