@@ -2,6 +2,8 @@ package lox
 
 import (
 	"fmt"
+	"math"
+	"strconv"
 	"strings"
 )
 
@@ -20,7 +22,15 @@ func (t AstPrinter) VisitExprLiteral(literal Literal) interface{} {
 	if literal.Value == nil {
 		return "nil"
 	}
-	return fmt.Sprintf("%v", literal.Value)
+	switch l := literal.Value.(type) {
+	case float64:
+		if math.Floor(l) == l {
+			return fmt.Sprintf("%.1f", literal.Value)
+		}
+		return strconv.FormatFloat(l, 'g', -1, 64)
+	default:
+		return fmt.Sprint(l)
+	}
 }
 
 func (t AstPrinter) VisitExprUnary(unary Unary) interface{} {
