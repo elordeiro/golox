@@ -9,9 +9,10 @@
             "type": "go",
             "request": "launch",
             "mode": "debug",
-            "program": "${workspaceFolder}/cmd/myinterpreter",
+            "program": "${workspaceFolder}/main.go",
             "cwd": "${workspaceFolder}",
-            "console": "integratedTerminal"
+            "console": "integratedTerminal",
+            "args": ["parse", "main.go"]
         }
     ]
 }
