@@ -1,5 +1,7 @@
 package lox
 
+import "os"
+
 type Parser struct {
 	lox     Lox
 	tokens  []Token
@@ -140,6 +142,7 @@ func (p *Parser) primary() Expr {
 		return Grouping{expr}
 	}
 
+	os.Exit(65)
 	panic(p.error(p.peek(), "Expect expression."))
 }
 
@@ -148,6 +151,7 @@ func (p *Parser) consume(typ TokenType, message string) (Token, ParseError) {
 		return p.advance(), ParseError{}
 	}
 
+	os.Exit(65)
 	return p.peek(), p.error(p.peek(), message)
 }
 
