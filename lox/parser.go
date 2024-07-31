@@ -2,6 +2,17 @@ package lox
 
 import "os"
 
+/*
+expr       → equality ;
+equality   → comparison ( ( "!=" | "==" ) comparison )* | ternary ;
+ternary    → expression "?" expression ":" expression ;
+comparison → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
+term       → factor ( ( "-" | "+" ) factor )* ;
+factor     → unary ( ( "/" | "*" ) unary )* ;
+unary      → ( "!" | "-" ) unary | primary ;
+primary    → NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")";
+*/
+
 type Parser struct {
 	lox     Lox
 	tokens  []Token
@@ -9,10 +20,6 @@ type Parser struct {
 }
 
 type ParseError struct{}
-
-// func (e ParseError) Error() string {
-// 	return "Parse error"
-// }
 
 func NewParser(tokens []Token) *Parser {
 	return &Parser{tokens: tokens, current: 0}
@@ -34,6 +41,14 @@ func (p *Parser) equality() Expr {
 		right := p.comparison()
 		expr = Binary{expr, operator, right}
 	}
+
+	// if p.match(QUESTION) {
+	// 	condition := expr
+	// 	trueExpr := p.expression()
+	// 	p.consume(COLON, "Expect ':' after ternary true expression.")
+	// 	falseExpr := p.expression()
+	// 	expr = Ternary{condition, trueExpr, falseExpr}
+	// }
 
 	return expr
 }

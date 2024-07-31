@@ -10,15 +10,19 @@ import (
 type AstPrinter struct {
 }
 
-func (t AstPrinter) VisitExprBinary(binary Binary) interface{} {
+func (t AstPrinter) VisitExprTernary(ternary Ternary) any {
+	return t.Parenthesize("?", ternary.Condition, ternary.TrueExpr, ternary.FalseExpr)
+}
+
+func (t AstPrinter) VisitExprBinary(binary Binary) any {
 	return t.Parenthesize(binary.Operator.Lexeme, binary.Left, binary.Right)
 }
 
-func (t AstPrinter) VisitExprGrouping(grouping Grouping) interface{} {
+func (t AstPrinter) VisitExprGrouping(grouping Grouping) any {
 	return t.Parenthesize("group", grouping.Expression)
 }
 
-func (t AstPrinter) VisitExprLiteral(literal Literal) interface{} {
+func (t AstPrinter) VisitExprLiteral(literal Literal) any {
 	if literal.Value == nil {
 		return "nil"
 	}
@@ -33,7 +37,7 @@ func (t AstPrinter) VisitExprLiteral(literal Literal) interface{} {
 	}
 }
 
-func (t AstPrinter) VisitExprUnary(unary Unary) interface{} {
+func (t AstPrinter) VisitExprUnary(unary Unary) any {
 	return t.Parenthesize(unary.Operator.Lexeme, unary.Right)
 }
 

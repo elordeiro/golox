@@ -12,7 +12,7 @@
             "program": "${workspaceFolder}/main.go",
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
-            "args": ["parse", "main.go"]
+            "args": ["evaluate", "test.lox"]
         }
     ]
 }

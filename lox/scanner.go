@@ -86,6 +86,10 @@ func (s *Scanner) scanToken(lox *Lox) {
 		} else {
 			s.addToken(SLASH)
 		}
+	case '?':
+		s.addToken(QUESTION)
+	case ':':
+		s.addToken(COLON)
 	case ' ', '\r', '\t':
 		// Ignore whitespace
 	case '\n':

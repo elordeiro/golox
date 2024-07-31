@@ -10,6 +10,7 @@ import (
 
 type Config struct {
 	Filename string
+	RunRepl  bool
 	Mode     int
 }
 
@@ -18,9 +19,12 @@ func main() {
 
 	if config.Mode == lox.ModeHelp {
 		fmt.Fprintln(os.Stderr, "Usage: ")
-		fmt.Fprintln(os.Stderr, "\t./golox.sh tokenize <filename>")
-		fmt.Fprintln(os.Stderr, "\t./golox.sh # Repl Not implemented yet")
-		fmt.Fprintln(os.Stderr, "\t./golox.sh <filename> # Interpret File Not implemented yet")
+		fmt.Fprintln(os.Stderr, "\t./golox.sh                     # Repl Mode - Currently default opt produces AST")
+		fmt.Fprintln(os.Stderr, "\t./golox.sh tokenize            # Repl Mode - Produces tokens")
+		fmt.Fprintln(os.Stderr, "\t./golox.sh tokenize <filename> # Tokenize file")
+		fmt.Fprintln(os.Stderr, "\t./golox.sh parse               # Parse Mode - Produces AST")
+		fmt.Fprintln(os.Stderr, "\t./golox.sh parse <filename>    # Parse file")
+		fmt.Fprintln(os.Stderr, "\t./golox.sh help                # Display this help message")
 		os.Exit(1)
 	}
 
@@ -29,8 +33,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	if config.Mode == lox.ModeRepl {
-		runPrompt()
+	if config.RunRepl {
+		runPrompt(config)
 	} else {
 		runFile(config)
 	}
@@ -47,15 +51,24 @@ func runFile(config *Config) {
 	if lox.HadError {
 		os.Exit(65)
 	}
+	if lox.HadRuntimeError {
+		os.Exit(70)
+	}
 }
 
-func runPrompt() {
-	lox := &lox.Lox{HadError: false}
+func runPrompt(config *Config) {
+	lox := &lox.Lox{HadError: false, Mode: lox.ModeParse}
+	if config.Mode > 0 {
+		lox.Mode = config.Mode
+	}
 	reader := bufio.NewReader(os.Stdin)
 	for {
 		fmt.Print("> ")
 		var input string
 		input, _ = reader.ReadString('\n')
+		if input == "exit()\n" {
+			os.Exit(1)
+		}
 		lox.Run(input)
 	}
 }
@@ -68,15 +81,24 @@ func parseArgs() *Config {
 
 	if len(os.Args) == 1 {
 		config.Mode = lox.ModeRepl
+		config.RunRepl = true
 		return config
 	}
 
 	if len(os.Args) == 2 {
-		if os.Args[1] == "help" {
+		switch os.Args[1] {
+		case "tokenize":
+			config.Mode = lox.ModeTokenize
+		case "parse":
+			config.Mode = lox.ModeParse
+		case "evaluate":
+			config.Mode = lox.ModeEvaluate
+		case "help":
 			config.Mode = lox.ModeHelp
-			return config
+		default:
+			config.Mode = lox.ModeUnknown
 		}
-		config.Filename = os.Args[1]
+		config.RunRepl = true
 		return config
 	}
 
@@ -84,17 +106,17 @@ func parseArgs() *Config {
 		switch os.Args[1] {
 		case "tokenize":
 			config.Mode = lox.ModeTokenize
-			config.Filename = os.Args[2]
-			return config
 		case "parse":
 			config.Mode = lox.ModeParse
-			config.Filename = os.Args[2]
-			return config
+		case "evaluate":
+			config.Mode = lox.ModeEvaluate
 		default:
 			config.Mode = lox.ModeUnknown
-			return config
 		}
+		config.Filename = os.Args[2]
+		return config
 	}
 
+	config.Mode = lox.ModeUnknown
 	return config
 }

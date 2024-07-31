@@ -8,15 +8,17 @@ import (
 const (
 	ModeInterpret = iota
 	ModeRepl
-	ModeHelp
 	ModeTokenize
 	ModeParse
+	ModeEvaluate
+	ModeHelp
 	ModeUnknown
 )
 
 type Lox struct {
-	HadError bool
-	Mode     int
+	HadError        bool
+	HadRuntimeError bool
+	Mode            int
 }
 
 func (lox *Lox) Run(source string) {
@@ -37,6 +39,16 @@ func (lox *Lox) Run(source string) {
 		}
 
 		fmt.Println(PrintAst(expression))
+	case ModeEvaluate:
+		parser := NewParser(tokens)
+		expression := parser.parse()
+
+		if lox.HadError {
+			return
+		}
+
+		interpreter := NewInterpreter(*lox)
+		interpreter.Interpret(expression)
 	}
 }
 
@@ -55,4 +67,9 @@ func (lox *Lox) ErrorToken(token Token, message string) {
 	} else {
 		lox.report(token.Line, " at '"+token.Lexeme+"'", message)
 	}
+}
+
+func (lox *Lox) RuntimeError(err RuntimeError) {
+	fmt.Printf("%v\n[line %d]", err.Message, err.Token.Line)
+	lox.HadRuntimeError = true
 }

@@ -13,9 +13,10 @@ func main() {
 	}
 	outputDir := os.Args[1]
 	defineAst(outputDir, "Expr", []string{
+		"Ternary  : Condition Expr, TrueExpr Expr, FalseExpr Expr",
 		"Binary   : Left Expr, Operator Token, Right Expr",
 		"Grouping : Expression Expr",
-		"Literal  : Value interface{}",
+		"Literal  : Value any",
 		"Unary    : Operator Token, Right Expr",
 	})
 }
@@ -31,7 +32,7 @@ func defineAst(outputDir string, baseName string, types []string) {
 
 	fmt.Fprintf(file, "package lox\n\n")
 	fmt.Fprintf(file, "type %s interface {\n", baseName)
-	fmt.Fprintf(file, "\tAccept(visitor Visitor) interface{}\n")
+	fmt.Fprintf(file, "\tAccept(visitor Visitor) any\n")
 	fmt.Fprintf(file, "}\n\n")
 
 	defineVisitor(file, baseName, types)
@@ -53,7 +54,7 @@ func defineType(file *os.File, baseName string, className string, fieldList stri
 	}
 	fmt.Fprintf(file, "}\n")
 	fmt.Fprintf(file, "\n")
-	fmt.Fprintf(file, "func (t %s) Accept(visitor Visitor) interface{} {\n", className)
+	fmt.Fprintf(file, "func (t %s) Accept(visitor Visitor) any {\n", className)
 	fmt.Fprintf(file, "\treturn visitor.Visit%s%s(t)\n", baseName, className)
 	fmt.Fprintf(file, "}\n\n")
 }
@@ -62,7 +63,7 @@ func defineVisitor(file *os.File, baseName string, types []string) {
 	fmt.Fprintf(file, "type Visitor interface {\n")
 	for _, t := range types {
 		className := strings.Trim(strings.Split(t, ":")[0], " ")
-		fmt.Fprintf(file, "\tVisit%s%s(%s %s) interface{}\n", baseName, className, strings.ToLower(className), className)
+		fmt.Fprintf(file, "\tVisit%s%s(%s %s) any\n", baseName, className, strings.ToLower(className), className)
 	}
 	fmt.Fprintf(file, "}\n\n")
 }
