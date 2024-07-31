@@ -85,7 +85,7 @@ func (i *Interpreter) VisitExprBinary(binary Binary) any {
 		if err != nil {
 			return err
 		}
-		return left.(float64) / right.(float64)
+		return left.(float64) * right.(float64)
 	}
 
 	// Unreachable
