@@ -72,7 +72,7 @@ func (lox *Lox) ErrorToken(token Token, message string) {
 }
 
 func (lox *Lox) RuntimeError(err RuntimeError) {
-	// fmt.Printf("%v\n[line %d]", err.Message, err.Token.Line)
+	// fmt.Printf("%v\n[line %d]\n", err.Message, err.Token.Line)
 	lox.HadRuntimeError = true
 }
 
