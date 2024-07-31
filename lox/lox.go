@@ -2,7 +2,9 @@ package lox
 
 import (
 	"fmt"
+	"math"
 	"os"
+	"strconv"
 )
 
 const (
@@ -72,4 +74,11 @@ func (lox *Lox) ErrorToken(token Token, message string) {
 func (lox *Lox) RuntimeError(err RuntimeError) {
 	fmt.Printf("%v\n[line %d]", err.Message, err.Token.Line)
 	lox.HadRuntimeError = true
+}
+
+func FormatNumber(num float64) string {
+	if math.Floor(num) == num {
+		return fmt.Sprintf("%.1f", num)
+	}
+	return strconv.FormatFloat(num, 'g', -1, 64)
 }

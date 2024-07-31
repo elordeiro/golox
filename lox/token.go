@@ -2,8 +2,6 @@ package lox
 
 import (
 	"fmt"
-	"math"
-	"strconv"
 )
 
 type TokenType int
@@ -87,12 +85,9 @@ type Token struct {
 }
 
 func (t Token) String() string {
-	switch t.Literal.(type) {
+	switch l := t.Literal.(type) {
 	case float64:
-		if math.Floor(t.Literal.(float64)) == t.Literal {
-			return t.Type.String() + " " + t.Lexeme + " " + fmt.Sprintf("%.1f", t.Literal)
-		}
-		return t.Type.String() + " " + t.Lexeme + " " + strconv.FormatFloat(t.Literal.(float64), 'g', -1, 64)
+		return t.Type.String() + " " + t.Lexeme + " " + FormatNumber(l)
 	default:
 		return t.Type.String() + " " + t.Lexeme + " " + fmt.Sprint(t.Literal)
 	}

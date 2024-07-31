@@ -147,7 +147,7 @@ func (i *Interpreter) stringify(obj any) string {
 	}
 
 	if val, ok := obj.(float64); ok {
-		text := fmt.Sprintf("%f", val)
+		text := FormatNumber(val)
 		if text[len(text)-2:] == ".0" {
 			return text[:len(text)-2]
 		}
