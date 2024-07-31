@@ -49,7 +49,7 @@ func (lox *Lox) Run(source string) {
 			return
 		}
 
-		interpreter := NewInterpreter(*lox)
+		interpreter := NewInterpreter(lox)
 		interpreter.Interpret(expression)
 	}
 }
@@ -72,7 +72,7 @@ func (lox *Lox) ErrorToken(token Token, message string) {
 }
 
 func (lox *Lox) RuntimeError(err RuntimeError) {
-	fmt.Printf("%v\n[line %d]", err.Message, err.Token.Line)
+	// fmt.Printf("%v\n[line %d]", err.Message, err.Token.Line)
 	lox.HadRuntimeError = true
 }
 

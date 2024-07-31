@@ -3,7 +3,7 @@ package lox
 import "fmt"
 
 type Interpreter struct {
-	lox Lox
+	lox *Lox
 }
 
 type RuntimeError struct {
@@ -15,7 +15,7 @@ func (r RuntimeError) Error() string {
 	return r.Message
 }
 
-func NewInterpreter(lox Lox) *Interpreter {
+func NewInterpreter(lox *Lox) *Interpreter {
 	return &Interpreter{lox: lox}
 }
 
@@ -161,7 +161,7 @@ func (i *Interpreter) checkNumberOperand(operator Token, operand any) error {
 	if _, ok := operand.(float64); ok {
 		return nil
 	}
-	return RuntimeError{operator, "Operand must be a number"}
+	return RuntimeError{operator, "Operand must be a number."}
 }
 
 func (i *Interpreter) checkNumberOperands(operator Token, left, right any) error {
@@ -170,7 +170,7 @@ func (i *Interpreter) checkNumberOperands(operator Token, left, right any) error
 	if leftIsFloat && rightIsFloat {
 		return nil
 	}
-	return RuntimeError{operator, "Operands must be numbers"}
+	return RuntimeError{operator, "Operands must be numbers."}
 }
 
 func (i *Interpreter) Interpret(expr Expr) {
