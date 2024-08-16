@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/codecrafters-io/interpreter-starter-go/lox"
+	"github.com/elordeiro/GoLox/lox"
 )
 
 type Config struct {
@@ -24,6 +24,8 @@ func main() {
 		fmt.Fprintln(os.Stderr, "\t./golox.sh tokenize <filename> # Tokenize file")
 		fmt.Fprintln(os.Stderr, "\t./golox.sh parse               # Parse Mode - Produces AST")
 		fmt.Fprintln(os.Stderr, "\t./golox.sh parse <filename>    # Parse file")
+		fmt.Fprintln(os.Stderr, "\t./golox.sh evaluate            # Evaluate Mode - Produces output")
+		fmt.Fprintln(os.Stderr, "\t./golox.sh evaluate <filename> # Evaluate file")
 		fmt.Fprintln(os.Stderr, "\t./golox.sh help                # Display this help message")
 		os.Exit(1)
 	}
